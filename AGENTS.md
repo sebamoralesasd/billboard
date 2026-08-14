@@ -16,6 +16,9 @@ billboard           # Películas de los últimos 30 días
     --from DATE     # Películas desde DATE
     --to DATE       # Películas hasta DATE
     --short         # Información básica (título, fecha y hora)
+
+# Depuración
+BILLBOARD_LOG_LEVEL=DEBUG billboard   # Logs detallados de las requests HTTP
 ```
 
 ## Code style

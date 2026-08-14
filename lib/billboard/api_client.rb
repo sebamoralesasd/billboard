@@ -11,6 +11,7 @@ module Billboard
     DEFAULT_URL = 'https://elcairocinepublico.gob.ar/wp-json/tribe/events/v1/'
     TIMEOUT = 5
     PER_PAGE = 50
+    LOG_OPTIONS = { headers: true, bodies: false, errors: true, log_level: :debug }.freeze
 
     attr_reader :connection
 
@@ -62,6 +63,7 @@ module Billboard
       Faraday.new(url: ENV.fetch('BILLBOARD_API_URL', DEFAULT_URL)) do |conn|
         conn.options.timeout = TIMEOUT
         conn.options.open_timeout = TIMEOUT
+        conn.response :logger, Logging.logger, **LOG_OPTIONS
       end
     end
   end
