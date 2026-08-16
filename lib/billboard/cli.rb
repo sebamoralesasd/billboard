@@ -27,6 +27,7 @@ module Billboard
       OptionParser.new do |opts|
         opts.banner = 'Uso: billboard [opciones]'
         opts.on('--short', 'Información básica (título, fecha y hora)') { options.short = true }
+        opts.on('--no-cache', 'Ignorar el caché y volver a pedir el rango a la API') { options.cache = false }
       end
     end
   end

@@ -9,7 +9,7 @@ require_relative 'logging'
 module Billboard
   class ApiClient
     DEFAULT_URL = 'https://elcairocinepublico.gob.ar/wp-json/tribe/events/v1/'
-    TIMEOUT = 5
+    TIMEOUT = 7
     PER_PAGE = 50
     LOG_OPTIONS = { headers: true, bodies: false, errors: true, log_level: :debug }.freeze
 

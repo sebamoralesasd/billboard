@@ -27,16 +27,23 @@ module Billboard
     end
 
     def ensure_cached(range)
-      missing = range.each_day.reject { |day| repository.fetched?(day) }
-      if missing.empty?
+      days = days_to_fetch(range)
+      if days.empty?
         Logging.logger.info('Todas las fechas están en caché')
         return
       end
 
-      fetch_range = DateRange.new(missing.min.to_time, missing.max.to_time + 86_399)
+      fetch_range = DateRange.new(days.min.to_time, days.max.to_time + 86_399)
       events = api_client.fetch_events(fetch_range)
-      repository.save(events)
-      repository.mark_fetched(missing)
+      repository.replace_in(fetch_range, events)
+      repository.mark_fetched(days)
+    end
+
+    def days_to_fetch(range)
+      return range.each_day.reject { |day| repository.fetched?(day) } if options.cache?
+
+      Logging.logger.info('Ignorando caché: se refresca todo el rango')
+      range.each_day
     end
 
     def formatter

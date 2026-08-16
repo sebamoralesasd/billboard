@@ -16,6 +16,7 @@ billboard           # Películas de los últimos 30 días
     --from DATE     # Películas desde DATE
     --to DATE       # Películas hasta DATE
     --short         # Información básica (título, fecha y hora)
+    --no-cache      # Ignorar el caché y volver a pedir el rango a la API
 
 # Depuración
 BILLBOARD_LOG_LEVEL=DEBUG billboard   # Logs detallados de las requests HTTP

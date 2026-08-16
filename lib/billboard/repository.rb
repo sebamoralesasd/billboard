@@ -38,13 +38,24 @@ module Billboard
       end
     end
 
+    def replace_in(range, events)
+      connection.transaction do
+        connection.execute('DELETE FROM events WHERE event_day BETWEEN ? AND ?', day_bounds(range))
+        save(events)
+      end
+    end
+
     def events_in(range)
       rows = connection.execute(
         'SELECT id, title, start_date, url FROM events ' \
         'WHERE event_day BETWEEN ? AND ? ORDER BY start_date',
-        [range.start_date.strftime('%Y-%m-%d'), range.end_date.strftime('%Y-%m-%d')]
+        day_bounds(range)
       )
       rows.map { |row| to_event(row) }
+    end
+
+    def day_bounds(range)
+      [range.start_date.strftime('%Y-%m-%d'), range.end_date.strftime('%Y-%m-%d')]
     end
 
     def bind_params(event)
