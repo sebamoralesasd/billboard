@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 require_relative 'date_ranges/default'
+require_relative 'date_ranges/custom'
 require_relative 'errors'
 
 module Billboard
   module DateRangeResolver
     DATE_RANGES = {
-      default: DateRanges::Default
+      default: DateRanges::Default,
+      custom: DateRanges::Custom
     }.freeze
 
     def self.resolve(options)

@@ -5,8 +5,13 @@ require 'date'
 module Billboard
   class DateRange
     API_FORMAT = '%Y-%m-%d %H:%M:%S'
+    END_OF_DAY_SECONDS = (23 * 3600) + (59 * 60) + 59
 
     attr_reader :start_date, :end_date
+
+    def self.for_days(first_day, last_day)
+      new(first_day.to_time, last_day.to_time + END_OF_DAY_SECONDS)
+    end
 
     def initialize(start_date, end_date)
       @start_date = start_date

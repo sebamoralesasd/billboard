@@ -9,9 +9,7 @@ module Billboard
 
       def self.build(_options)
         today = Date.today
-        start_date = today.to_time
-        end_date = (today + WINDOW_DAYS).to_time + (23 * 3600) + (59 * 60) + 59
-        DateRange.new(start_date, end_date)
+        DateRange.for_days(today, today + WINDOW_DAYS)
       end
     end
   end

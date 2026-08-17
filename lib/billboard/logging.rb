@@ -10,7 +10,7 @@ module Billboard
 
     def self.build_logger
       logger = Logger.new($stderr)
-      logger.level = ENV.fetch('BILLBOARD_LOG_LEVEL', 'INFO')
+      logger.level = ENV.fetch('BILLBOARD_LOG_LEVEL', 'WARN')
       logger.progname = 'billboard'
       logger
     end

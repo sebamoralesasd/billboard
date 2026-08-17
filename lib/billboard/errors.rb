@@ -6,4 +6,6 @@ module Billboard
   class ApiError < Error; end
 
   class InvalidRangeError < Error; end
+
+  class UsageError < Error; end
 end
