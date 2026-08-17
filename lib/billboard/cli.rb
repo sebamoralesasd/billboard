@@ -24,6 +24,7 @@ module Billboard
     def self.parse(argv)
       options = Options.new
       parser(options).parse(argv)
+      apply_range(options)
       options
     rescue OptionParser::ParseError => e
       raise UsageError, e.message
@@ -39,14 +40,24 @@ module Billboard
     end
 
     def self.range_options(opts, options)
+      opts.on('--week', 'Películas de la semana (próximos 7 días)') { options.range_key = :week }
       opts.on('--from DATE', 'Películas desde DATE (YYYY-MM-DD)') do |value|
         options.from = parse_date(value, '--from')
-        options.range_key = :custom
       end
       opts.on('--to DATE', 'Películas hasta DATE (YYYY-MM-DD)') do |value|
         options.to = parse_date(value, '--to')
-        options.range_key = :custom
       end
+    end
+
+    def self.apply_range(options)
+      return if options.from.nil? && options.to.nil?
+      raise UsageError, range_conflict_message(options.range_key) unless options.range_key == :default
+
+      options.range_key = :custom
+    end
+
+    def self.range_conflict_message(range_key)
+      "--#{range_key} no puede combinarse con --from/--to"
     end
 
     def self.parse_date(value, flag)
