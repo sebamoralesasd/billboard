@@ -41,6 +41,7 @@ module Billboard
 
     def self.range_options(opts, options)
       opts.on('--week', 'Películas de la semana (próximos 7 días)') { options.range_key = :week }
+      opts.on('--month', 'Películas del mes (desde hoy hasta fin de mes)') { options.range_key = :month }
       opts.on('--from DATE', 'Películas desde DATE (YYYY-MM-DD)') do |value|
         options.from = parse_date(value, '--from')
       end

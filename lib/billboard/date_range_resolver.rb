@@ -3,6 +3,7 @@
 require_relative 'date_ranges/default'
 require_relative 'date_ranges/custom'
 require_relative 'date_ranges/week'
+require_relative 'date_ranges/month'
 require_relative 'errors'
 
 module Billboard
@@ -10,7 +11,8 @@ module Billboard
     DATE_RANGES = {
       default: DateRanges::Default,
       custom: DateRanges::Custom,
-      week: DateRanges::Week
+      week: DateRanges::Week,
+      month: DateRanges::Month
     }.freeze
 
     def self.resolve(options)

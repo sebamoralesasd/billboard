@@ -10,7 +10,7 @@ Los resultados se obtienen a través de la [API de El Cairo](api.json) con el en
 bundle install
 
 # Correr aplicación
-billboard           # Películas de los últimos 30 días
+billboard           # Películas de los próximos 30 días
     --week          # Películas de la semana
     --month         # Películas del mes
     --from DATE     # Películas desde DATE
@@ -29,7 +29,7 @@ BILLBOARD_LOG_LEVEL=DEBUG billboard   # Logs detallados de las requests HTTP
 - Usar `Logger` para logs sobre puntos relevantes
 - Usar patrón `ENV.fetch('KEY', default)` para variables de entorno
 - Usar `attr_*` en lugar de getters explícitos
-- Usar Faraday para requests HTTP, con 5 segundos de timeout
+- Usar Faraday para requests HTTP, con 7 segundos de timeout
 - Usar SQLite3 para la base de datos
 - No comentar las funciones
 
