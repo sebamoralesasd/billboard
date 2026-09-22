@@ -18,7 +18,7 @@ module Billboard
     end
 
     def event_day
-      start_time.strftime('%Y-%m-%d')
+      start_time.strftime(DateRange::DAY_FORMAT)
     end
   end
 end

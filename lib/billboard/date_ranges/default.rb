@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../date_range'
+require 'date'
 
 module Billboard
   module DateRanges

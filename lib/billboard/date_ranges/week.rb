@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'date'
-require_relative '../date_range'
 
 module Billboard
   module DateRanges

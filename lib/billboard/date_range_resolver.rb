@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'date_ranges/default'
-require_relative 'date_ranges/custom'
-require_relative 'date_ranges/week'
-require_relative 'date_ranges/month'
-require_relative 'errors'
-
 module Billboard
   module DateRangeResolver
     DATE_RANGES = {

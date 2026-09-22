@@ -13,11 +13,9 @@ require_relative 'billboard/database'
 require_relative 'billboard/repository'
 require_relative 'billboard/api_client'
 require_relative 'billboard/style'
+require_relative 'billboard/formatters/base'
 require_relative 'billboard/formatters/full'
 require_relative 'billboard/formatters/short'
 require_relative 'billboard/options'
 require_relative 'billboard/app'
 require_relative 'billboard/cli'
-
-module Billboard
-end

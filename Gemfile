@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'faraday'
+gem 'faraday-retry'
 gem 'sqlite3'
 
 gem 'rubocop', '~> 1.89'

@@ -1,19 +1,25 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'sqlite3'
 
 module Billboard
   class Database
     SCHEMA_VERSION = 1
+    DATA_HOME = ENV.fetch('XDG_DATA_HOME', File.join(Dir.home, '.local', 'share'))
+    DEFAULT_PATH = File.join(DATA_HOME, 'billboard', 'billboard.db')
 
     attr_reader :connection
 
-    def initialize(path = ENV.fetch('BILLBOARD_DB', 'billboard.db'))
+    def initialize(path = ENV.fetch('BILLBOARD_DB', DEFAULT_PATH))
+      FileUtils.mkdir_p(File.dirname(path))
       @connection = SQLite3::Database.new(path)
       @connection.results_as_hash = true
       migrate
       create_schema
     end
+
+    private
 
     def migrate
       return if connection.get_first_value('PRAGMA user_version') >= SCHEMA_VERSION

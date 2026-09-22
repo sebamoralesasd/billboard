@@ -21,6 +21,7 @@ billboard           # Películas de los próximos 30 días
 # Depuración
 BILLBOARD_LOG_LEVEL=DEBUG billboard   # Logs detallados de las requests HTTP
 BILLBOARD_CACHE_TTL=12 billboard      # Horas de validez del caché (default 24)
+BILLBOARD_DB=./billboard.db billboard # Ruta de la base (default ~/.local/share/billboard/billboard.db)
 ```
 
 ## Code style

@@ -3,14 +3,10 @@
 require 'date'
 require 'optparse'
 require 'sqlite3'
-require_relative 'options'
-require_relative 'app'
-require_relative 'errors'
 
 module Billboard
   module CLI
-    DATE_FORMAT = '%Y-%m-%d'
-    DATE_PATTERN = /\A\d{4}-\d{2}-\d{2}\z/.freeze
+    DATE_PATTERN = /\A\d{4}-\d{2}-\d{2}\z/
 
     def self.run(argv)
       options = parse(argv)
@@ -68,7 +64,7 @@ module Billboard
     def self.parse_date(value, flag)
       raise InvalidRangeError, invalid_date_message(value, flag) unless value.match?(DATE_PATTERN)
 
-      Date.strptime(value, DATE_FORMAT)
+      Date.strptime(value, DateRange::DAY_FORMAT)
     rescue Date::Error
       raise InvalidRangeError, invalid_date_message(value, flag)
     end
@@ -76,5 +72,8 @@ module Billboard
     def self.invalid_date_message(value, flag)
       "Fecha inválida en #{flag}: #{value} (formato esperado YYYY-MM-DD)"
     end
+
+    private_class_method :parser, :range_options, :apply_range, :range_conflict_message,
+                         :parse_date, :invalid_date_message
   end
 end

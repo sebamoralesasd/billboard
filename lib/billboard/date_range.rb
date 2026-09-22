@@ -4,6 +4,7 @@ require 'date'
 
 module Billboard
   class DateRange
+    DAY_FORMAT = '%Y-%m-%d'
     API_FORMAT = '%Y-%m-%d %H:%M:%S'
     END_OF_DAY_SECONDS = (23 * 3600) + (59 * 60) + 59
 

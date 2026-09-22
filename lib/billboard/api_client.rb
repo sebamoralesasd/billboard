@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
-require 'json'
-require_relative 'event'
-require_relative 'errors'
-require_relative 'logging'
+require 'faraday/retry'
 
 module Billboard
   class ApiClient
@@ -12,8 +9,12 @@ module Billboard
     TIMEOUT = 7
     PER_PAGE = 50
     LOG_OPTIONS = { headers: true, bodies: false, errors: true, log_level: :debug }.freeze
-
-    attr_reader :connection
+    RETRY_OPTIONS = {
+      max: 2,
+      interval: 0.5,
+      backoff_factor: 2,
+      exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed, Faraday::ServerError]
+    }.freeze
 
     def initialize
       @connection = build_connection
@@ -35,6 +36,10 @@ module Billboard
       events
     end
 
+    private
+
+    attr_reader :connection
+
     def request_page(range, page)
       Logging.logger.info("Consultando API página #{page} (#{range.api_start} - #{range.api_end})")
       response = connection.get('events') do |req|
@@ -43,13 +48,11 @@ module Billboard
         req.params['per_page'] = PER_PAGE
         req.params['page'] = page
       end
-      raise ApiError, "Respuesta inesperada de la API: #{response.status}" unless response.success?
-
-      JSON.parse(response.body)
+      response.body
+    rescue Faraday::ParsingError
+      raise ApiError, 'Respuesta inválida de la API'
     rescue Faraday::Error => e
       raise ApiError, "Fallo al consultar la API: #{e.message}"
-    rescue JSON::ParserError
-      raise ApiError, 'Respuesta inválida de la API'
     end
 
     def build_event(data)
@@ -65,6 +68,9 @@ module Billboard
       Faraday.new(url: ENV.fetch('BILLBOARD_API_URL', DEFAULT_URL)) do |conn|
         conn.options.timeout = TIMEOUT
         conn.options.open_timeout = TIMEOUT
+        conn.request :retry, **RETRY_OPTIONS
+        conn.response :raise_error
+        conn.response :json, content_type: //
         conn.response :logger, Logging.logger, **LOG_OPTIONS
       end
     end

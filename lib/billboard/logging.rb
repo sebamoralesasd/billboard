@@ -21,5 +21,7 @@ module Billboard
       logger.level = Logger::WARN
       logger.warn("BILLBOARD_LOG_LEVEL inválido: #{level}. Se usa WARN")
     end
+
+    private_class_method :build_logger, :apply_level
   end
 end
