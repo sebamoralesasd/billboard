@@ -10,9 +10,16 @@ module Billboard
 
     def self.build_logger
       logger = Logger.new($stderr)
-      logger.level = ENV.fetch('BILLBOARD_LOG_LEVEL', 'WARN')
       logger.progname = 'billboard'
+      apply_level(logger, ENV.fetch('BILLBOARD_LOG_LEVEL', 'WARN'))
       logger
+    end
+
+    def self.apply_level(logger, level)
+      logger.level = level
+    rescue ArgumentError
+      logger.level = Logger::WARN
+      logger.warn("BILLBOARD_LOG_LEVEL inválido: #{level}. Se usa WARN")
     end
   end
 end

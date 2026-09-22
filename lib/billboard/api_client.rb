@@ -48,6 +48,8 @@ module Billboard
       JSON.parse(response.body)
     rescue Faraday::Error => e
       raise ApiError, "Fallo al consultar la API: #{e.message}"
+    rescue JSON::ParserError
+      raise ApiError, 'Respuesta inválida de la API'
     end
 
     def build_event(data)

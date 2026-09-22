@@ -2,10 +2,10 @@
 
 require 'date'
 require 'optparse'
+require 'sqlite3'
 require_relative 'options'
 require_relative 'app'
 require_relative 'errors'
-require_relative 'logging'
 
 module Billboard
   module CLI
@@ -16,9 +16,13 @@ module Billboard
       options = parse(argv)
       App.new(options).run
     rescue Billboard::Error => e
-      Logging.logger.error(e.message)
       warn(e.message)
       exit(1)
+    rescue SQLite3::Exception => e
+      warn("Error de base de datos: #{e.message}")
+      exit(1)
+    rescue Interrupt
+      exit(130)
     end
 
     def self.parse(argv)

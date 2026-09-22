@@ -9,7 +9,7 @@ module Billboard
 
       def self.build(_options)
         today = Date.today
-        DateRange.for_days(today, today + WINDOW_DAYS)
+        DateRange.for_days(today, today + (WINDOW_DAYS - 1))
       end
     end
   end

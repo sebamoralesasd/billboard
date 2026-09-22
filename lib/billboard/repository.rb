@@ -1,27 +1,40 @@
 # frozen_string_literal: true
 
 require_relative 'event'
+require_relative 'errors'
 
 module Billboard
   class Repository
-    attr_reader :connection
+    TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-    def initialize(database)
+    attr_reader :connection, :ttl_hours
+
+    def initialize(database, ttl_hours: ENV.fetch('BILLBOARD_CACHE_TTL', '24'))
       @connection = database.connection
+      @ttl_hours = parse_ttl(ttl_hours)
     end
 
     def fetched?(day)
       key = day.strftime('%Y-%m-%d')
-      !connection.get_first_value('SELECT 1 FROM fetched_days WHERE day = ?', key).nil?
+      cutoff = (Time.now.utc - (ttl_hours * 3600)).strftime(TIMESTAMP_FORMAT)
+      sql = 'SELECT 1 FROM fetched_days WHERE day = ? AND fetched_at >= ?'
+      !connection.get_first_value(sql, [key, cutoff]).nil?
     end
 
     def mark_fetched(days)
+      now = Time.now.utc.strftime(TIMESTAMP_FORMAT)
       days.each do |day|
-        connection.execute(
-          'INSERT OR IGNORE INTO fetched_days (day) VALUES (?)',
-          day.strftime('%Y-%m-%d')
-        )
+        connection.execute(<<~SQL, [day.strftime('%Y-%m-%d'), now])
+          INSERT INTO fetched_days (day, fetched_at) VALUES (?, ?)
+          ON CONFLICT(day) DO UPDATE SET fetched_at = excluded.fetched_at
+        SQL
       end
+    end
+
+    def parse_ttl(value)
+      Integer(value)
+    rescue ArgumentError
+      raise UsageError, "BILLBOARD_CACHE_TTL inválido: #{value} (se esperan horas enteras)"
     end
 
     def save(events)
